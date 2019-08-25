@@ -1,8 +1,6 @@
 apiVersion: skaffold/v1beta12
 kind: Config
 build:
-  tagPolicy:
-    gitCommit: {}
   artifacts:
   - image: demo
     context: .
@@ -14,8 +12,7 @@ deploy:
       chartPath: charts/demo
       namespace: demo
       setValueTemplates:
-        version: "latest"
-        namespace: "{{.USERNAME }}"
+        version: "{{.USERNAME }}"
 profiles:
 - name: local
   build:
