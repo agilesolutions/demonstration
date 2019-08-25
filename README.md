@@ -26,7 +26,8 @@ skaffold build -p local
 
 1. [Image repository handling](https://skaffold.dev/docs/concepts/#image-repository-handling)
 2. [Tagging strategies](https://skaffold.dev/docs/how-tos/taggers/)
-3. [Deployers](https://skaffold.dev/docs/how-tos/deployers/) 
+3. [Deployers](https://skaffold.dev/docs/how-tos/deployers/)
+4. [building Java Docker images has never been easier](https://cloud.google.com/blog/products/application-development/jib-1-0-0-is-ga-building-java-docker-images-has-never-been-easier)
 
 ## Debugging and terminal into demo container
 
