@@ -1,10 +1,15 @@
 apiVersion: skaffold/v1beta12
 kind: Config
+# Enforce SKaffold to use Jib
+# read https://itnext.io/continuous-spring-boot-deployment-in-kubernetes-using-jib-and-skaffold-11fd3c71d941
 build:
+  local:
+    push: false
+# Generated artifact
   artifacts:
-  - image: agilesolutions/demo:latest
-    context: .
-    jibMaven: {}
+    - image: agilesolutions/demo
+# Use jibMaven
+      jibMaven: {}
 deploy:
   helm:
     releases:

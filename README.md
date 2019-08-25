@@ -28,6 +28,8 @@ skaffold build -p local
 2. [Tagging strategies](https://skaffold.dev/docs/how-tos/taggers/)
 3. [Deployers](https://skaffold.dev/docs/how-tos/deployers/)
 4. [building Java Docker images has never been easier](https://cloud.google.com/blog/products/application-development/jib-1-0-0-is-ga-building-java-docker-images-has-never-been-easier)
+5. [Skaffold for Java - Continuous Development for Kubernetes](https://static.rainfocus.com/oracle/oow18/sess/1525975857633001tisM/PF/Skaffold%20Jib%20%281%29_15402356271050016l1j.pdf)
+6. [Continuous Spring Boot deployment in Kubernetes using Jib and Skaffold](https://itnext.io/continuous-spring-boot-deployment-in-kubernetes-using-jib-and-skaffold-11fd3c71d941)
 
 ## Debugging and terminal into demo container
 
