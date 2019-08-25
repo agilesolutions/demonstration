@@ -1,0 +1,30 @@
+apiVersion: skaffold/v1beta12
+kind: Config
+build:
+  tagPolicy:
+    gitCommit: {}
+  artifacts:
+  - image: demo
+    context: .
+    jibMaven: {}
+deploy:
+  helm:
+    releases:
+    - name: demo
+      chartPath: charts/demo
+      namespace: demo
+      setValueTemplates:
+        version: "{{.DIGEST}}"
+        namespace: "{{.USERNAME}}"
+profiles:
+- name: local
+  build:
+    tagPolicy:
+      gitCommit: {}
+    artifacts:
+    - image: demo
+      context: .
+      docker:
+        dockerfile: Dockerfile
+        cacheFrom:
+        - openjdk1.8:latest
