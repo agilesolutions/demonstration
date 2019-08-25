@@ -14,8 +14,8 @@ deploy:
       chartPath: charts/demo
       namespace: demo
       setValueTemplates:
-        version: "{{.DIGEST}}"
-        namespace: "{{.USERNAME}}"
+        version: "latest"
+        namespace: "{{.USERNAME }}"
 profiles:
 - name: local
   build:
