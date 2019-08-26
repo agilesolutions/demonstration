@@ -45,3 +45,12 @@ skaffold build -p local
 * find out which cluster Tiller would install to with kubectl config current-context or kubectl cluster-info
 * kubectl config get-contexts
 * kubectl config use-context CONTEXT_NAME
+
+## Just a test
+
+1. kubectl create deployment test --image=kitematic/hello-world-nginx
+2. kubectl get pods
+3. kubectl expose deployment test --port=80 --type=NodePort
+4. kubectl get services
+5. kubectl describe service test
+6. http://CLUSTER_IP:NODE_PORT be accessible
