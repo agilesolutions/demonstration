@@ -41,3 +41,7 @@ spec:
       - name: "{{  .Chart.Name }}"
         configMap:
           name: "{{  .Chart.Name }}"
+  initContainers:
+  - name: init-config
+    image: agilesolutions/configinjector:latest
+    command: ['configinjector', '-url=http://localhost:8888/foo/dev', '-directory=chart/demo']    
