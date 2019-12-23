@@ -13,6 +13,9 @@ Demonstrates how to deploy Springboot apps with HELM and inject environment spec
 helm lint .
 helm template -f values.yaml .
 helm install --name demo --set version=latest -f values.yaml .
+
+kubectl exec -ti demo-756586ff67-qwwq5 -n demo  bash
+
 ```
 
 ## local skaffold build
