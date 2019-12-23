@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app: "{{  .Chart.Name }}-selector"
-        version: "{{  .Values.version }}"
+        version: "{{  .Values.version }}"m
     spec:
       containers:
       - name: "{{  .Chart.Name  }}"
@@ -30,18 +30,21 @@ spec:
             cpu: "{{ .Values.resources.requests.cpu }}"
             memory: "{{ .Values.resources.requests.memory }}"
         volumeMounts:
-          -
+          - name: workdir
             mountPath: /usr/include
-            name: "{{  .Chart.Name }}"
             readOnly: false
         env:
           - name: PORT
             value : "{{ .Values.service.servicePort }}"
+# These containers are run during pod initialization
+      initContainers:
+      - name: init-config
+        image: agilesolutions/configinjector:latest
+        command: ['configinjector', '-url=http://localhost:8888/foo/dev', '-directory=/usr/include']
+        volumeMounts:
+          - name: workdir
+            mountPath: /usr/include
+            readOnly: false
       volumes:
-      - name: "{{  .Chart.Name }}"
-        configMap:
-          name: "{{  .Chart.Name }}"
-  initContainers:
-  - name: init-config
-    image: agilesolutions/configinjector:latest
-    command: ['configinjector', '-url=http://localhost:8888/foo/dev', '-directory=chart/demo']    
+      - name: workdir
+        emptyDir: {}
