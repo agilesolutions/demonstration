@@ -1,0 +1,155 @@
+---
+# Source: demo/templates/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: "demo"
+---
+# Source: demo/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "demo"
+  namespace: "demo"
+data:
+  application.yaml: |-
+    debug: true
+    
+    spring:
+      application:
+        name: demo
+        version: 1.0
+        environment: DEV
+      activemq:
+        broker-url: tcp://www.agilesolutions.com:61616
+      elasticsearch:
+        rest:
+          uris: http://www.agilesolutions.com:9200
+    
+    datasource:
+      url: jdbc:oracle:thin:@//XXX.agilesolutions.com:1700/XXX.agilesolutions.com
+      username: NGA
+      password: 2d724b9021260e5e6cee91
+      driver-class-name: oracle.jdbc.OracleDriver
+    
+    server:
+      servlet:
+        context-path: /demo
+    
+    flowable:
+      form:
+        app-url-root: ${server.servlet.context-path}
+      frontend:
+        notification-logo-url: "file:/u01/users/admrun/JB-logo.png"
+      platform:
+        idm:
+          default-password: test
+      websocket:
+        stomp-broker-addresses: www.agilesolutions.com:61613
+    
+    management:
+      endpoint:
+        web:
+          exposure:
+            include: "*"
+        shutdown:
+          enabled: true
+          show-details: when_authorized
+    security:
+      basic:
+        enabled: true
+    
+---
+# Source: demo/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: 'true'
+  name: "demo"
+  namespace: "demo"
+  labels:
+    chart: 'demo-1'
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+  selector:
+    app: "demo-selector"
+---
+# Source: demo/templates/deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "demo"
+  namespace: "demo"
+  labels:
+    chart: 'demo-1'
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: "demo-selector"
+        version: "1"m
+    spec:
+      containers:
+      - name: "demo"
+        image: "agilesolutions/demo:1"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "300Mi"
+        volumeMounts:
+          - name: workdir
+            mountPath: /usr/include
+            readOnly: false
+        env:
+          - name: PORT
+            value : "8080"
+# These containers are run during pod initialization
+      initContainers:
+      - name: init-config
+        image: agilesolutions/configinjector:latest
+        command: ['configinjector', '-url=http://localhost:8888/foo/dev', '-directory=/usr/include']
+        volumeMounts:
+          - name: workdir
+            mountPath: /usr/include
+            readOnly: false
+      volumes:
+      - name: workdir
+        emptyDir: {}
+---
+# Source: demo/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "demo"
+  namespace: "demo"
+  labels:
+    chart: 'demo-1'
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    
+spec:
+  rules:
+    - host: 'demo'
+      http:
+        paths:
+          - path: '/'
+            backend:
+              serviceName: demo
+              servicePort: http
