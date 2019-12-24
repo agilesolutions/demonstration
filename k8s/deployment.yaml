@@ -65,8 +65,8 @@ spec:
 # These containers are run during pod initialization
       initContainers:
       - name: init-config
-        image: agilesolutions/configinjector:latest
-        command: ['configinjector', '-url=http://localhost:8888/foo/dev', '-directory=/usr/include']
+        image: agilesolutions/configinjector:remote
+        command: ['configinjector', '-url=http://configserver:8888/foo/dev', '-directory=/usr/include']
         volumeMounts:
           - name: workdir
             mountPath: /usr/include
